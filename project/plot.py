@@ -24,8 +24,15 @@ if __name__ == '__main__':
         ['Data Parallel - GPU0', 'Data Parallel - GPU1', 'Single GPU'],
         'ddp_vs_rn.png')
 
-    pp_mean, pp_std = None, None
-    mp_mean, mp_std = None, None
+    single_token_mean, single_token_std = 210424.76450593607, 941.8155379847459
+    device_token_mean, device_token_std =  80303.4657044615, 484.94988287617525
+    plot([device_token_mean, single_token_mean],
+        [device_token_std, single_token_std],
+        ['Data Parallel - 2GPUs', 'Single GPU'],
+        'ddp_vs_rn2.png')
+
+    pp_mean, pp_std = 48.38349425792694, 0.13692247867584229
+    mp_mean, mp_std = 48.969767570495605, 0.10080480575561523
     plot([pp_mean, mp_mean],
         [pp_std, mp_std],
         ['Pipeline Parallel', 'Model Parallel'],
