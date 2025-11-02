@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 plt.switch_backend('Agg')
 import numpy as np
 
-def plot(means, stds, labels, fig_name):
+def plot(means, stds, labels, ylabel, fig_name):
     fig, ax = plt.subplots()
     ax.bar(np.arange(len(means)), means, yerr=stds,
            align='center', alpha=0.5, ecolor='red', capsize=10, width=0.6)
-    ax.set_ylabel('GPT2 Execution Time (Second)')
+    ax.set_ylabel(ylabel)
     ax.set_xticks(np.arange(len(means)))
     ax.set_xticklabels(labels)
     ax.yaxis.grid(True)
@@ -22,6 +22,7 @@ if __name__ == '__main__':
     plot([device0_mean, device1_mean, single_mean],
         [device0_std, device1_std, single_std],
         ['Data Parallel - GPU0', 'Data Parallel - GPU1', 'Single GPU'],
+         "GPT2 Execution Time (Second)",
         'ddp_vs_rn.png')
 
     single_token_mean, single_token_std = 210424.76450593607, 941.8155379847459
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     plot([device_token_mean, single_token_mean],
         [device_token_std, single_token_std],
         ['Data Parallel - 2GPUs', 'Single GPU'],
+         "GPT2 Throughput (Tokens per Second)",
         'ddp_vs_rn2.png')
 
     pp_mean, pp_std = 48.38349425792694, 0.13692247867584229
@@ -36,4 +38,13 @@ if __name__ == '__main__':
     plot([pp_mean, mp_mean],
         [pp_std, mp_std],
         ['Pipeline Parallel', 'Model Parallel'],
+         "GPT2 Execution Time (Second)",
         'pp_vs_mp.png')
+
+    pp_token_mean, pp_token_std = 13194.509520849286, 45.66273155822455
+    mp_token_mean, mp_token_std = 13048.4779308935, 24.017911832460413
+    plot([pp_mean, mp_mean],
+        [pp_std, mp_std],
+        ['Pipeline Parallel', 'Model Parallel'],
+         "GPT2 Throughput (Tokens per Second)",
+        'pp_vs_mp2.png')
