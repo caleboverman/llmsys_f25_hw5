@@ -43,8 +43,8 @@ if __name__ == '__main__':
 
     pp_token_mean, pp_token_std = 13194.509520849286, 45.66273155822455
     mp_token_mean, mp_token_std = 13048.4779308935, 24.017911832460413
-    plot([pp_mean, mp_mean],
-        [pp_std, mp_std],
+    plot([pp_token_mean, mp_token_mean],
+        [pp_token_std, mp_token_std],
         ['Pipeline Parallel', 'Model Parallel'],
          "GPT2 Throughput (Tokens per Second)",
         'pp_vs_mp2.png')
