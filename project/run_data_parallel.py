@@ -209,8 +209,26 @@ if __name__ == '__main__':
     2. You should start the processes to work and terminate resources properly
     '''
     # BEGIN ASSIGN5_1_3
-    world_size = None  # TODO: Define the number of GPUs
-    backend = None  # TODO: Define your backend for communication, we suggest using 'nccl'
-    
-    raise NotImplementedError("Data Parallel Not Implemented Yet")
+    world_size = args.world_size
+    backend = 'nccl' if torch.cuda.is_available() else 'gloo'
+
+    for rank in range(world_size):
+        process = Process(
+            target=run_dp,
+            args=(
+                rank,
+                world_size,
+                backend,
+                args.dataset,
+                args.model_max_length,
+                args.n_epochs,
+                args.batch_size,
+                args.learning_rate,
+            ),
+        )
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join()
     # END ASSIGN5_1_3
