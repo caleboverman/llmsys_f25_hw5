@@ -15,7 +15,8 @@ class Partition():
     def __getitem__(self, index):
         '''Given index, get the data according to the partitioned index'''
         # BEGIN ASSIGN5_1_1
-        raise NotImplementedError("Data Parallel Not Implemented Yet")
+        data_index = self.index[index]
+        return self.data[data_index]
         # END ASSIGN5_1_1
 
 class DataPartitioner():
@@ -29,7 +30,22 @@ class DataPartitioner():
         2. Create different partitions of indices according to `sizes` and store in `self.partitions`
         '''
         # BEGIN ASSIGN5_1_1
-        raise NotImplementedError("Data Parallel Not Implemented Yet")
+        indices = list(range(len(self.data)))
+        rng.shuffle(indices)
+
+        total_size = len(indices)
+        lengths = [int(size * total_size) for size in sizes]
+        assigned = sum(lengths)
+        remainder = total_size - assigned
+
+        for i in range(remainder):
+            lengths[i % len(lengths)] += 1
+
+        start = 0
+        for length in lengths:
+            end = start + length
+            self.partitions.append(indices[start:end])
+            start = end
         # END ASSIGN5_1_1
 
     def use(self, partition):
@@ -38,7 +54,7 @@ class DataPartitioner():
         Just one line of code. Think it simply.
         '''
         # BEGIN ASSIGN5_1_1
-        raise NotImplementedError("Data Parallel Not Implemented Yet")
+        return Partition(self.data, self.partitions[partition])
         # END ASSIGN5_1_1
 
 def partition_dataset(rank, world_size, dataset, batch_size=128, collate_fn=None):
@@ -54,5 +70,21 @@ def partition_dataset(rank, world_size, dataset, batch_size=128, collate_fn=None
     4. Wrap the dataset with `DataLoader`, remember to customize the `collate_fn`
     """
     # BEGIN ASSIGN5_1
-    raise NotImplementedError("Data Parallel Not Implemented Yet")
+    if world_size <= 0:
+        raise ValueError("world_size must be a positive integer")
+
+    partition_batch = batch_size // world_size
+    if partition_batch <= 0:
+        raise ValueError("partitioned batch size must be positive")
+
+    partition_sizes = [1.0 / world_size for _ in range(world_size)]
+    partitioner = DataPartitioner(dataset, sizes=partition_sizes)
+    partition_dataset = partitioner.use(rank)
+
+    return DataLoader(
+        partition_dataset,
+        batch_size=partition_batch,
+        shuffle=True,
+        collate_fn=collate_fn,
+    )
     # END ASSIGN5_1
