@@ -32,7 +32,18 @@ def average_gradients(model):
     3. Average the gradients over the world_size (total number of devices)
     '''
     # BEGIN ASSIGN5_1_2
-    raise NotImplementedError("Data Parallel Not Implemented Yet")
+    if not dist.is_available() or not dist.is_initialized():
+        return
+
+    world_size = dist.get_world_size()
+    if world_size <= 1:
+        return
+
+    for param in model.parameters():
+        if param.grad is None:
+            continue
+        dist.all_reduce(param.grad.data, op=dist.ReduceOp.SUM)
+        param.grad.data /= world_size
     # END ASSIGN5_1_2
 
 def setup(rank, world_size, backend):
@@ -42,7 +53,17 @@ def setup(rank, world_size, backend):
     2. Use `torch.distributed` to init the process group
     '''
     # BEGIN ASSIGN5_1_2
-    raise NotImplementedError("Data Parallel Not Implemented Yet")
+    os.environ['MASTER_ADDR'] = '127.0.0.1'
+    os.environ['MASTER_PORT'] = '11868'
+
+    if dist.is_initialized():
+        return
+
+    dist.init_process_group(
+        backend=backend,
+        rank=rank,
+        world_size=world_size,
+    )
     # END ASSIGN5_1_2
 
 
