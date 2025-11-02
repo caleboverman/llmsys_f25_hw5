@@ -56,6 +56,10 @@ def setup(rank, world_size, backend):
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '11868'
 
+    if 'ASSIGN5_PYTEST' in os.environ:
+        global PYTEST
+        PYTEST = os.environ.get('ASSIGN5_PYTEST') == '1'
+
     if dist.is_initialized():
         return
 
@@ -213,6 +217,8 @@ if __name__ == '__main__':
         torch.multiprocessing.set_start_method('spawn', force=True)
     except RuntimeError:
         pass
+
+    os.environ['ASSIGN5_PYTEST'] = '1' if args.pytest else '0'
 
     world_size = args.world_size
     backend = 'nccl' if torch.cuda.is_available() else 'gloo'
