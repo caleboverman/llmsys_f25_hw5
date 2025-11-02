@@ -209,6 +209,11 @@ if __name__ == '__main__':
     2. You should start the processes to work and terminate resources properly
     '''
     # BEGIN ASSIGN5_1_3
+    try:
+        torch.multiprocessing.set_start_method('spawn', force=True)
+    except RuntimeError:
+        pass
+
     world_size = args.world_size
     backend = 'nccl' if torch.cuda.is_available() else 'gloo'
 
