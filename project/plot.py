@@ -16,9 +16,9 @@ def plot(means, stds, labels, fig_name):
 
 # Fill the data points here
 if __name__ == '__main__':
-    single_mean, single_std = None, None
-    device0_mean, device0_std =  None, None
-    device1_mean, device1_std =  None, None
+    single_mean, single_std = 48.83797280788421, 0.1449735612858846
+    device0_mean, device0_std =  29.61578960418701, 9.923982936691035
+    device1_mean, device1_std =  26.605942058563233, 2.322660918176044
     plot([mp0_mean, mp1_mean, rn_mean],
         [mp0_std, mp1_std, rn_std],
         ['Data Parallel - GPU0', 'Data Parallel - GPU1', 'Single GPU'],
