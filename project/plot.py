@@ -25,8 +25,8 @@ if __name__ == '__main__':
          "GPT2 Execution Time (Second)",
         'ddp_vs_rn.png')
 
-    single_token_mean, single_token_std = 210424.76450593607, 941.8155379847459
-    device_token_mean, device_token_std =  80303.4657044615, 484.94988287617525
+    device_token_mean, device_token_std = 210424.76450593607, 941.8155379847459
+    single_token_mean, single_token_std =  80303.4657044615, 484.94988287617525
     plot([device_token_mean, single_token_mean],
         [device_token_std, single_token_std],
         ['Data Parallel - 2GPUs', 'Single GPU'],
